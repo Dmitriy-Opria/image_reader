@@ -7,6 +7,7 @@ import (
 	"os"
 	"fmt"
 	"encoding/binary"
+	"io"
 )
 type (
 	Query struct {
@@ -75,7 +76,7 @@ func getPointValue(fileName string, queryX, queryY int) uint32{
 
 	var point uint32
 
-	file.Seek(offset, os.SEEK_CUR)
+	file.Seek(offset, io.SeekCurrent)
 	
 	binary.Read(file, binary.BigEndian, point)
 	return point
