@@ -75,7 +75,7 @@ func getPointValue(fileName string, queryX, queryY int) uint32{
 
 	var point uint32
 
-	file.Seek(offset, 1)
+	file.Seek(offset, os.SEEK_CUR)
 	
 	binary.Read(file, binary.BigEndian, point)
 	return point
