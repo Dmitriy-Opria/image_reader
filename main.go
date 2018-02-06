@@ -27,8 +27,8 @@ type (
 
 func main() {
 
-	fileConverter("./kml.png")
-	//testFileConverter("./kml.converted")
+	//fileConverter("./kml.png")
+	testFileConverter("./kml.converted")
 
 	/*r := chi.NewRouter()
 
@@ -84,14 +84,14 @@ func getPointValue(fileName string, queryX, queryY int) (point uint32) {
 		return
 	}
 
-	image, err := png.Decode(file)
+	img, err := png.Decode(file)
 
 	if err != nil {
 		fmt.Printf("Can`t read file, it`s not png : %s\n", err.Error())
 		return
 	}
 
-	rect := image.Bounds()
+	rect := img.Bounds()
 
 	if rect.Max.Y < queryY || rect.Max.X < queryX {
 		fmt.Println("Invalid query point size")
@@ -149,11 +149,9 @@ func fileConverter(fileName string) {
 
 		for x := 0; x < rect.Max.X; x++ {
 
-			c, _ := color.NRGBAModel.Convert(rect.At(x, y)).(color.NRGBA)
+			c, _ := color.NRGBAModel.Convert(image.At(x, y)).(color.NRGBA)
 
-			pointByte := []byte{c.R, c.G, c.B, c.B}
-
-			fmt.Println(c.R, c.G, c.B, c.B)
+			pointByte := []byte{c.R, c.G, c.B, c.A}
 
 			buf.Write(pointByte)
 		}
@@ -194,11 +192,13 @@ func testFileConverter(fileName string) {
 	for y := newRect.Max.X; y > 0; y-- {
 		for x := newRect.Max.Y; x > 0; x-- {
 			buf := make([]uint8, 4)
+			
 			if err := binary.Read(file, binary.BigEndian, buf); err != nil {
 				return
 			}
 			colour := color.NRGBA{R: buf[0], G: buf[1], B: buf[2], A: buf[3]}
-			im.Set(int(x), int(y), colour)
+
+			im.Set(int(newRect.Max.X - x), int(newRect.Max.Y - y), colour)
 		}
 	}
 
