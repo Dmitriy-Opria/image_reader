@@ -115,12 +115,12 @@ func fileConverter(fileName string) {
 
 	file, err := os.OpenFile(fileName, os.O_RDONLY, 0644)
 
-	defer file.Close()
-
 	if err != nil {
 		fmt.Printf("Can`t read file : %s\n", err.Error())
 		return
 	}
+
+	defer file.Close()
 
 	image, err := png.Decode(file)
 
